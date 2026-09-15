@@ -22,4 +22,11 @@ describe('App', () => {
       'Shortner URL',
     );
   });
+
+  it('should render the URL input inside the main content', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled: HTMLElement = fixture.nativeElement;
+    expect(compiled.querySelector('main app-input-url input[type="url"]')).not.toBeNull();
+  });
 });
