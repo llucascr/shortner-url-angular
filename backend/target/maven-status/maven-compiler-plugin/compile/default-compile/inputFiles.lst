@@ -1,0 +1,6 @@
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/UrlShortenerApplication.java
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/controller/UrlMappingController.java
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/domain/entity/UrlMapping.java
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/dto/UrlMappingResponse.java
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/repository/UrlMappingRepository.java
+/Users/lucasdecamposranzani/Developer/desafios/url-shortener/src/main/java/com/desafio/url_shortener/service/UrlService.java
