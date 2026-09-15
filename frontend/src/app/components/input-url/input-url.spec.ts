@@ -13,8 +13,6 @@ describe('InputUrl', () => {
     expect(input.getAttribute('aria-label')).toBe('URL para encurtar');
     expect(element.querySelector('button')?.textContent?.trim()).toBe('Shorten');
     expect(element.querySelector('button')?.type).toBe('submit');
-    expect(element.querySelectorAll('button svg[aria-hidden="true"]')).toHaveLength(5);
-    expect(element.querySelectorAll('button circle')).toHaveLength(50);
   });
 
   it('should emit the URL without navigating on submission', async () => {

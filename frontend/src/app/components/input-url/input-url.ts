@@ -1,10 +1,10 @@
 import { Component, inject, output } from '@angular/core';
-import { OrbInput } from '../ui/animated-input/animated-input';
-import { AntiMetalButton } from '../ui/anti-metal-button/anti-metal-button';
+import { UrlInput } from '../ui/url-input/url-input';
+import { VercelButton } from '../ui/vercel-button/vercel-button';
 import { ShortnerUrl } from '../../services/shortner-url';
 
 @Component({
-  imports: [AntiMetalButton, OrbInput],
+  imports: [UrlInput, VercelButton],
   selector: 'app-input-url',
   templateUrl: './input-url.html',
 })
@@ -28,5 +28,4 @@ export class InputUrl {
 
     this.urlSubmitted.emit(originalUrl);
   }
-
 }

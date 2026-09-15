@@ -2,7 +2,7 @@
 
 ## Project And Design
 
-- Read `PROJECT.md` for product context: this Angular URL shortener will consume an already-built Spring Boot API; its visual reference is Supabase Sage on https://21st.dev/.
+- Read `PROJECT.md` for product context: this Angular URL shortener will consume an already-built Spring Boot API; its visual reference is the Vercel theme on https://21st.dev/.
 - Whenever components, colors, templates, or other UI references are needed, delegate research on https://21st.dev/ to an agent before implementation. Ask for source links, adapt examples to Angular/Tailwind v4, and report unavailable references rather than inventing them.
 
 ## Commands
