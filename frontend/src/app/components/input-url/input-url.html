@@ -1,6 +1,6 @@
 <form
   class="flex flex-col gap-3 sm:flex-row sm:items-center"
-  (submit)="$event.preventDefault(); urlSubmitted.emit(urlInput.value)"
+  (submit)="$event.preventDefault(); shorten(urlInput.value)"
 >
   <app-orb-input #urlInput class="min-w-0 flex-1" />
   <button appAntiMetalButton type="submit">Shorten</button>

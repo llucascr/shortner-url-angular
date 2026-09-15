@@ -37,7 +37,7 @@ public class UrlService {
 
         UrlMapping savedUrlMapping = urlMappingRepository.save(shortUrl);
 
-        String shortenerUrl = "http://localhost:8080/" + savedUrlMapping.getShortCode();
+        String shortenerUrl = "http://localhost:8080/api/" + savedUrlMapping.getShortCode();
 
         return new UrlMappingResponse(
                 savedUrlMapping.getOriginalUrl(),

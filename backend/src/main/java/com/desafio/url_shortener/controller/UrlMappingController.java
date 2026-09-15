@@ -20,7 +20,7 @@ public class UrlMappingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UrlMappingResponse shortenUrl(@RequestParam String url) {
+    public UrlMappingResponse addCode(@RequestParam String url) {
         return urlService.shortenUrl(url);
     }
 
@@ -33,5 +33,11 @@ public class UrlMappingController {
                 .build();
     }
 
+    @PostMapping("/short")
+    @CrossOrigin(origins = "${app.cors.allowed-origins}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String shortenUrl(@RequestParam String url) {
+        return urlService.shortenUrl(url).shortenerUrl();
+    }
 
 }
