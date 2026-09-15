@@ -1,7 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { EMPTY, Observable, of } from 'rxjs';
+import { ShortnerUrl } from '../../services/shortner-url';
 import { InputUrl } from './input-url';
 
 describe('InputUrl', () => {
+  let response$: Observable<string>;
+  const shortenUrl = vi.fn((_: string): Observable<string> => response$);
+
+  beforeEach(async () => {
+    response$ = EMPTY;
+    shortenUrl.mockClear();
+
+    await TestBed.configureTestingModule({
+      imports: [InputUrl],
+      providers: [{ provide: ShortnerUrl, useValue: { shortenUrl } }],
+    }).compileComponents();
+  });
+
   it('should render a required URL field and shorten button', async () => {
     const fixture = TestBed.createComponent(InputUrl);
     await fixture.whenStable();
@@ -56,5 +71,24 @@ describe('InputUrl', () => {
     element.querySelector('input')!.value = 'https://example.com';
     element.querySelector('button')!.click();
     expect(submitted).toHaveBeenCalledExactlyOnceWith('https://example.com');
+  });
+
+  it('should render the shortened URL returned by the service as a link', async () => {
+    const shortUrl = 'http://localhost:8080/api/abc123';
+    response$ = of(shortUrl);
+    const fixture = TestBed.createComponent(InputUrl);
+    await fixture.whenStable();
+    const element: HTMLElement = fixture.nativeElement;
+
+    element.querySelector('input')!.value = 'https://example.com/article';
+    element.querySelector('button')!.click();
+    fixture.detectChanges();
+    const link = element.querySelector('.short-url-result a') as HTMLAnchorElement;
+
+    expect(shortenUrl).toHaveBeenCalledExactlyOnceWith('https://example.com/article');
+    expect(link.textContent?.trim()).toBe(shortUrl);
+    expect(link.getAttribute('href')).toBe(shortUrl);
+    expect(link.target).toBe('_blank');
+    expect(link.rel).toBe('noopener noreferrer');
   });
 });
