@@ -1,9 +1,16 @@
 package com.desafio.url_shortener.domain.entity;
 
+import com.desafio.url_shortener.dto.UrlMappingResponse;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "url_mapping")
 public class UrlMapping {
@@ -16,7 +23,7 @@ public class UrlMapping {
     @Column(name = "short_code", unique = true)
     private String shortCode;
 
-    @Column(name = "original_url")
+    @Column(name = "original_url", columnDefinition = "TEXT")
     private String originalUrl;
 
     @Column(name = "created_at")
@@ -25,43 +32,13 @@ public class UrlMapping {
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
-    public Long getId() {
-        return id;
+    public UrlMappingResponse toResponse(String shortenerUrl) {
+        return new UrlMappingResponse(
+                this.originalUrl,
+                shortenerUrl,
+                this.expiresAt,
+                this.shortCode
+        );
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getShortCode() {
-        return shortCode;
-    }
-
-    public void setShortCode(String shortCode) {
-        this.shortCode = shortCode;
-    }
-
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
-
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(LocalDateTime expiresAt) {
-        this.expiresAt = expiresAt;
-    }
 }

@@ -1,0 +1,24 @@
+<div class="url-shortener">
+  <form class="flex items-stretch" (submit)="$event.preventDefault(); shorten(urlInput.value)">
+    <app-url-input #urlInput class="min-w-0 flex-1" />
+    <button appVercelButton type="submit">Shorten</button>
+  </form>
+
+  <div class="short-url-result" aria-live="polite">
+    @if (shortenedUrl(); as shortUrl) {
+      <span>URL encurtada</span>
+      <a
+        [href]="shortUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="'Abrir URL encurtada: ' + shortUrl"
+      >
+        {{ shortUrl }}
+      </a>
+    }
+  </div>
+
+  @if (errorMessage(); as message) {
+    <p class="request-error" role="alert">{{ message }}</p>
+  }
+</div>
