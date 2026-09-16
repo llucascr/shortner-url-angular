@@ -1,7 +1,23 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { EMPTY, Observable, of, throwError } from 'rxjs';
+import { ShortnerUrl } from '../../services/shortner-url';
 import { InputUrl } from './input-url';
 
 describe('InputUrl', () => {
+  let response$: Observable<string>;
+  const shortenUrl = vi.fn((_: string): Observable<string> => response$);
+
+  beforeEach(async () => {
+    response$ = EMPTY;
+    shortenUrl.mockClear();
+
+    await TestBed.configureTestingModule({
+      imports: [InputUrl],
+      providers: [{ provide: ShortnerUrl, useValue: { shortenUrl } }],
+    }).compileComponents();
+  });
+
   it('should render a required URL field and shorten button', async () => {
     const fixture = TestBed.createComponent(InputUrl);
     await fixture.whenStable();
@@ -13,8 +29,6 @@ describe('InputUrl', () => {
     expect(input.getAttribute('aria-label')).toBe('URL para encurtar');
     expect(element.querySelector('button')?.textContent?.trim()).toBe('Shorten');
     expect(element.querySelector('button')?.type).toBe('submit');
-    expect(element.querySelectorAll('button svg[aria-hidden="true"]')).toHaveLength(5);
-    expect(element.querySelectorAll('button circle')).toHaveLength(50);
   });
 
   it('should emit the URL without navigating on submission', async () => {
@@ -58,5 +72,49 @@ describe('InputUrl', () => {
     element.querySelector('input')!.value = 'https://example.com';
     element.querySelector('button')!.click();
     expect(submitted).toHaveBeenCalledExactlyOnceWith('https://example.com');
+  });
+
+  it('should render the shortened URL returned by the service as a link', async () => {
+    const shortUrl = 'http://localhost:8080/api/abc123';
+    response$ = of(shortUrl);
+    const fixture = TestBed.createComponent(InputUrl);
+    await fixture.whenStable();
+    const element: HTMLElement = fixture.nativeElement;
+
+    element.querySelector('input')!.value = 'https://example.com/article';
+    element.querySelector('button')!.click();
+    fixture.detectChanges();
+    const link = element.querySelector('.short-url-result a') as HTMLAnchorElement;
+
+    expect(shortenUrl).toHaveBeenCalledExactlyOnceWith('https://example.com/article');
+    expect(link.textContent?.trim()).toBe(shortUrl);
+    expect(link.getAttribute('href')).toBe(shortUrl);
+    expect(link.target).toBe('_blank');
+    expect(link.rel).toBe('noopener noreferrer');
+  });
+
+  it('should inform the user when the backend rate limit is reached', async () => {
+    response$ = throwError(
+      () =>
+        new HttpErrorResponse({
+          status: 400,
+          error: JSON.stringify({
+            mensagens: ["RateLimiter 'url' does not permit further calls"],
+          }),
+        }),
+    );
+    const fixture = TestBed.createComponent(InputUrl);
+    await fixture.whenStable();
+    const element: HTMLElement = fixture.nativeElement;
+
+    element.querySelector('input')!.value = 'https://example.com/article';
+    element.querySelector('button')!.click();
+    fixture.detectChanges();
+
+    const alert = element.querySelector('[role="alert"]');
+    expect(alert?.textContent?.trim()).toBe(
+      'Limite de solicitações atingido. Aguarde 30 segundos e tente novamente.',
+    );
+    expect(element.querySelector('.short-url-result a')).toBeNull();
   });
 });

@@ -17,16 +17,16 @@ Os endpoints, os formatos de requisicao e resposta, a URL base e eventuais requi
 
 ## Direcao Visual
 
-A referencia visual escolhida e o template **Supabase Sage** do [21st.dev](https://21st.dev/), especialmente suas cores.
+A referencia visual escolhida e o tema comunitario **Vercel** do [21st.dev](https://21st.dev/@serafimcloud/themes/vercel).
 
 - Usar essa referencia para orientar a identidade visual do frontend.
 - Consultar a referencia antes de definir valores de cores; nao tratar uma paleta aproximada como a paleta oficial do template.
 - Adaptar os exemplos encontrados para Angular e para o Tailwind v4 ja utilizado pelo projeto, sem introduzir outro framework de interface apenas para copiar um componente.
 
-O nome da referencia foi fornecido pelo responsavel pelo projeto. O link especifico do template e os valores da paleta ainda precisam ser confirmados na pesquisa.
+O tema usa uma paleta monocromatica, tipografia Geist, raios de 8px e sombras discretas. A aplicacao segue os tokens claros e escuros publicados pela referencia.
 
 ## Pesquisa De Interface
 
 Sempre que forem necessarios componentes, cores, templates ou outras referencias de interface, acionar um agente para pesquisar em **https://21st.dev/** antes de implementar.
 
-A pesquisa deve retornar os links das referencias encontradas e as informacoes relevantes para a implementacao. Se o site estiver indisponivel ou a referencia Supabase Sage nao for encontrada, informar a limitacao em vez de inventar resultados ou substituir silenciosamente a direcao visual.
+A pesquisa deve retornar os links das referencias encontradas e as informacoes relevantes para a implementacao. Se o site estiver indisponivel ou a referencia Vercel nao for encontrada, informar a limitacao em vez de inventar resultados ou substituir silenciosamente a direcao visual.
