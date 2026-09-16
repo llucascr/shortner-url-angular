@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { ShortnerUrl } from '../../services/shortner-url';
 import { InputUrl } from './input-url';
 
@@ -90,5 +91,30 @@ describe('InputUrl', () => {
     expect(link.getAttribute('href')).toBe(shortUrl);
     expect(link.target).toBe('_blank');
     expect(link.rel).toBe('noopener noreferrer');
+  });
+
+  it('should inform the user when the backend rate limit is reached', async () => {
+    response$ = throwError(
+      () =>
+        new HttpErrorResponse({
+          status: 400,
+          error: JSON.stringify({
+            mensagens: ["RateLimiter 'url' does not permit further calls"],
+          }),
+        }),
+    );
+    const fixture = TestBed.createComponent(InputUrl);
+    await fixture.whenStable();
+    const element: HTMLElement = fixture.nativeElement;
+
+    element.querySelector('input')!.value = 'https://example.com/article';
+    element.querySelector('button')!.click();
+    fixture.detectChanges();
+
+    const alert = element.querySelector('[role="alert"]');
+    expect(alert?.textContent?.trim()).toBe(
+      'Limite de solicitações atingido. Aguarde 30 segundos e tente novamente.',
+    );
+    expect(element.querySelector('.short-url-result a')).toBeNull();
   });
 });

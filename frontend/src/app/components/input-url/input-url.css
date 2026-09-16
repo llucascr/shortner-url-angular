@@ -53,6 +53,16 @@
   outline-offset: 3px;
 }
 
+.request-error {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--muted);
+  color: var(--foreground);
+  font-size: 0.875rem;
+}
+
 @media (max-width: 30rem) {
   .short-url-result {
     align-items: flex-start;

@@ -17,4 +17,8 @@
       </a>
     }
   </div>
+
+  @if (errorMessage(); as message) {
+    <p class="request-error" role="alert">{{ message }}</p>
+  }
 </div>
