@@ -2,12 +2,17 @@ package com.desafio.url_shortener.service;
 
 import com.desafio.url_shortener.domain.entity.UrlMapping;
 import com.desafio.url_shortener.dto.UrlMappingResponse;
+import com.desafio.url_shortener.exception.DataNotFound;
 import com.desafio.url_shortener.repository.UrlMappingRepository;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UrlService {
 
@@ -18,42 +23,38 @@ public class UrlService {
     private static final int SHORT_CODE_LENGTH = 6;
     private static final int EXPIRATION_DAYS = 7;
 
-    public UrlService(UrlMappingRepository urlMappingRepository) {
-        this.urlMappingRepository = urlMappingRepository;
-    }
-
     public UrlMappingResponse shortenUrl(String originalUrl) {
 
-        String shortCode = generateUniqueShortCode();
+        Optional<UrlMapping> existingUrl = urlMappingRepository.findByOriginalUrl(originalUrl);
 
-        UrlMapping shortUrl = new UrlMapping();
+        if (existingUrl.isPresent()) {
+            UrlMapping urlMapping = existingUrl.get();
+            String shortenerUrl = buildShortenedUrl(urlMapping);
 
-        shortUrl.setOriginalUrl(originalUrl);
-        shortUrl.setShortCode(shortCode);
-        shortUrl.setCreatedAt(LocalDateTime.now());
-        shortUrl.setExpiresAt(
-                LocalDateTime.now().plusDays(EXPIRATION_DAYS)
-        );
+            return urlMapping.toResponse(shortenerUrl);
+        }
+
+        UrlMapping shortUrl = UrlMapping.builder()
+                .originalUrl(originalUrl)
+                .shortCode(generateUniqueShortCode())
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusDays(EXPIRATION_DAYS))
+                .build();
 
         UrlMapping savedUrlMapping = urlMappingRepository.save(shortUrl);
+        String shortenerUrl = buildShortenedUrl(savedUrlMapping);
 
-        String shortenerUrl = "http://localhost:8080/api/" + savedUrlMapping.getShortCode();
+        return savedUrlMapping.toResponse(shortenerUrl);
+    }
 
-        return new UrlMappingResponse(
-                savedUrlMapping.getOriginalUrl(),
-                shortenerUrl,
-                savedUrlMapping.getExpiresAt(),
-                savedUrlMapping.getShortCode()
-        );
+    private String buildShortenedUrl(UrlMapping savedUrlMapping) {
+       return "http://localhost:8080/api/" + savedUrlMapping.getShortCode();
     }
 
     public String getOriginalUrl(String shortCode) {
 
-        UrlMapping shortUrl = urlMappingRepository
-                .findByShortCode(shortCode)
-                .orElseThrow(() ->
-                        new RuntimeException("URL não encontrada")
-                );
+        UrlMapping shortUrl = urlMappingRepository.findByShortCode(shortCode).orElseThrow(
+                () -> new RuntimeException("URL não encontrada"));
 
         if (shortUrl.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("URL expirada");
